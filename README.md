@@ -1,1 +1,0 @@
-# jeneralwan.github.io
