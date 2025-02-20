@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palestine Solidarity</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar-brand img {
+            height: 40px; /* Smaller logo */
+        }
+        .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-links li {
+            margin: 0 15px;
+        }
+        .nav-links a {
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 90vh;
+            overflow: hidden;
+            margin-top: 80px; /* To account for fixed header */
+        }
+        .carousel {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+        }
+        .cta-button {
+            padding: 10px 20px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Video Section (40:60 Ratio) */
+        .video-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 50px 20px;
+            background: #f9f9f9;
+        }
+        .video-content {
+            flex: 40%; /* 40% width for text */
+            padding-right: 20px;
+        }
+        .video-content h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .video-content p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+        .video-container {
+            flex: 60%; /* 60% width for video */
+            max-width: 60%;
+        }
+        .video-container video {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+
+        /* Photo Gallery */
+        .gallery {
+            padding: 50px 20px;
+            background: #f9f9f9;
+            text-align: center;
+        }
+        .gallery h1 {
+            font-size: 3rem;
+            font-weight: 200;
+            margin-bottom: 20px;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .gallery-item {
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 10px;
+            height: 250px; /* Fixed height */
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Timeline Section */
+        #timeline {
+            padding: 100px 0;
+            background: #f7f7f7;
+            border-top: 1px solid rgba(191, 191, 191, 0.4);
+            border-bottom: 1px solid rgba(191, 191, 191, 0.4);
+        }
+        #timeline h1 {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 200;
+            margin-bottom: 20px;
+        }
+        #timeline p.leader {
+            text-align: center;
+            max-width: 90%;
+            margin: auto;
+            margin-bottom: 45px;
+        }
+        .demo-card-wrapper {
+            position: relative;
+            margin: auto;
+            display: flex;
+            flex-flow: column wrap;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .demo-card-wrapper::after {
+            z-index: 1;
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            border-left: 1px solid #bdbdbd;
+        }
+        .demo-card {
+            position: relative;
+            display: block;
+            margin: 10px auto 80px;
+            max-width: 94%;
+            z-index: 2;
+            background: #fff;
+            box-shadow: 0px 1px 22px 4px rgba(0, 0, 0, 0.07);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .demo-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .demo-card .head {
+            position: relative;
+            display: flex;
+            align-items: center;
+            color: #fff;
+            font-weight: 400;
+            background: #46b8e9;
+            padding: 15px;
+        }
+        .demo-card .head .number-box {
+            display: inline;
+            float: left;
+            margin: 0 15px 0 0;
+            padding: 10px;
+            font-size: 35px;
+            line-height: 35px;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.17);
+        }
+        .demo-card .head h2 {
+            text-transform: uppercase;
+            font-size: 1.5rem; /* Larger year */
+            font-weight: inherit;
+            letter-spacing: 2px;
+            margin: 0;
+            padding-bottom: 6px;
+            line-height: 1rem;
+        }
+        .demo-card .head h2 span {
+            display: block;
+            font-size: 0.8rem; /* Adjusted for balance */
+            margin: 0;
+        }
+        .demo-card .body {
+            padding: 15px;
+        }
+        .demo-card .body p {
+            font-size: 14px;
+            line-height: 18px;
+            margin-bottom: 15px;
+        }
+        .demo-card .body img {
+            display: block;
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        /* Creative Timeline Arrangement */
+        .demo-card:nth-child(odd) {
+            margin-left: 0;
+            margin-right: auto;
+        }
+        .demo-card:nth-child(even) {
+            margin-left: auto;
+            margin-right: 0;
+        }
+        .demo-card:nth-child(odd) .head {
+            background: #ff6f61;
+        }
+        .demo-card:nth-child(even) .head {
+            background: #46b8e9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a class="navbar-brand">
+                <img src="logo.png" alt="Logo">
+            </a>
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#video">Mission</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#timeline">Timeline</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="carousel">
+            <div class="slide active" style="background-image: url('image9.jpg');"></div>
+            <div class="slide" style="background-image: url('image2.jpg');"></div>
+            <div class="slide" style="background-image: url('image5.jpg');"></div>
+        </div>
+        <div class="hero-content">
+            <h1>PALESTINE SOLIDARITY CAMPAIGN</h1>
+            <p>"From the river to the sea, Palestine will be free"</p>
+            <a href="https://palestinecampaign.org/" target="_blank">
+                <button class="cta-button">Learn More</button>
+            </a>
+        </div>
+    </section>
+    <!-- Video Section (40:60 Ratio) -->
+<section id="video" class="video-section">
+    <div class="video-content">
+        <h2>Discover Our Mission</h2>
+        <p>
+            At the heart of our campaign lies a deep commitment to justice, freedom, and human rights for the people of Palestine. We strive to raise awareness, educate communities, and take meaningful action to support Palestinian rights. Through advocacy, solidarity campaigns, and community engagement, we amplify voices that demand peace and an end to oppression.
+
+            Join us in making a difference. Together, we can stand for justice and work towards a future where freedom and dignity are upheld for all.
+        </p>
+    </div>
+    <div class="video-container">
+        <!-- YouTube Embed -->
+        <iframe 
+            width="100%" 
+            height="600" 
+            src="https://www.youtube.com/embed/E4iygQ--7dk?start=242" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+    </div>
+</section>
+    <!-- Photo Gallery -->
+    <section id="gallery" class="gallery">
+        <h1>Palestine Solidarity Gallery</h1>
+        <div class="gallery-grid">
+            <div class="gallery-item" onclick="openLightbox('image4.jpg')">
+                <img src="image4.jpg" alt="Image 1">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('image2.jpg')">
+                <img src="image2.jpg" alt="Image 2">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('image12.jpg')">
+                <img src="image12.jpg" alt="Image 3">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('image3.jpg')">
+                <img src="image3.jpg" alt="Image 3">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('image5.jpg')">
+                <img src="image5.jpg" alt="Image 3">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('image6.jpg')">
+                <img src="image6.jpg" alt="Image 3">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('image7.jpg')">
+                <img src="image7.jpg" alt="Image 3">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('image8.jpg')">
+                <img src="image8.jpg" alt="Image 3">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('image11.jpg')">
+                <img src="image11.jpg" alt="Image 3">
+            </div>
+            <div class="gallery-item" onclick="openLightbox('image10.jpg')">
+                <img src="image10.jpg" alt="Image 3">
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <span class="close-btn" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" src="" alt="Lightbox Image">
+    </div>
+
+    <!-- Timeline Section -->
+    <section id="timeline">
+        <h1>History of Palestine</h1>
+        <p class="leader">Key events in the history of Palestine solidarity.</p>
+        <div class="demo-card-wrapper">
+            <div class="demo-card demo-card--step1">
+                <div class="head">
+                    <div class="number-box">
+                        <span>01</span>
+                    </div>
+                    <h2><span class="small">1947</span> UN Partition Plan</h2>
+                </div>
+                <div class="body">
+                    <p>
+                        The UN General Assembly passes Resolution 181, dividing historic Palestine into separate Jewish and Arab states. Palestinians, who make up the majority of the population and own most of the land, reject the plan, seeing it as unjust and imposed without their consent. The plan leads to conflict and displacement.
+                    </p>
+                    <img src="event1.jpg" alt="Nakba">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step2">
+                <div class="head">
+                    <div class="number-box">
+                        <span>02</span>
+                    </div>
+                    <h2><span class="small">1948</span> Nakba – The Catastrophe</h2>
+                </div>
+                <div class="body">
+                    <p>
+                        Following the unilateral declaration of Israel's independence, Zionist militias and Israeli forces forcibly expel over 750,000 Palestinians from their homes. Entire villages are destroyed, and massacres like Deir Yassin instill terror among civilians. The Nakba marks the beginning of Palestinian dispossession and exile.
+                    </p>
+                    <img src="event2.jpg" alt="Six-Day War">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step3">
+                <div class="head">
+                    <div class="number-box">
+                        <span>03</span>
+                    </div>
+                    <h2><span class="small">1967</span> Occupation of Palestine – Six-Day War</h2>
+                </div>
+                <div class="body">
+                    <p>
+                        Israel launches an aggressive war, seizing the West Bank, East Jerusalem, Gaza, the Golan Heights, and the Sinai Peninsula. This expands Israeli occupation and leads to further displacement of Palestinians. East Jerusalem is illegally annexed, and Israeli settlements begin expanding into Palestinian land in violation of international law.
+                    </p>
+                    <img src="event3.jpg" alt="First Intifada">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step4">
+                <div class="head">
+                    <div class="number-box">
+                        <span>04</span>
+                    </div>
+                    <h2><span class="small">1967</span> UN Resolution 242</h2>
+                </div>
+                <div class="body">
+                    <p>
+                        The UN calls for Israel to withdraw from occupied territories and respect Palestinian rights. However, Israel continues its occupation, disregarding international law and intensifying settlement expansion in the West Bank and East Jerusalem.
+                    </p>
+                    <img src="event4.jpg" alt="Second Intifada">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step5">
+                <div class="head">
+                    <div class="number-box">
+                        <span>05</span>
+                    </div>
+                    <h2><span class="small">1973</span> Yom Kippur War and Palestinian Resistance</h2>
+                </div>
+                <div class="body">
+                    <p>
+                        Egypt and Syria attempt to reclaim occupied territories, showing that Arab nations still support Palestine. The war leads to greater international recognition of Palestinian rights, but Israel continues its oppression and colonization of Palestinian land.
+                    </p>
+                    <img src="event5.jpg" alt="Sheikh Jarrah">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step5">
+                <div class="head">
+                    <div class="number-box">
+                        <span>06</span>
+                    </div>
+                    <h2><span class="small">1978</span>Camp David Accords and Betrayal of Palestine</h2>
+                </div>
+                <div class="body">
+                    <p>
+                        Egypt signs a peace treaty with Israel, becoming the first Arab state to normalize relations. Palestinians feel abandoned as Egypt’s agreement does not ensure their freedom or sovereignty. Israel takes advantage of this division to strengthen its grip on occupied land.
+                    </p>
+                    <img src="event6.jpg" alt="Sheikh Jarrah">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step5">
+                <div class="head">
+                    <div class="number-box">
+                        <span>07</span>
+                    </div>
+                    <h2><span class="small">1987–1993</span> First Intifada – Palestinian Uprising </h2>
+                </div>
+                <div class="body">
+                    <p>
+                        Frustrated by decades of Israeli occupation, Palestinians launch a mass uprising demanding their rights. Protests, strikes, and civil disobedience are met with brutal Israeli repression, including live ammunition against unarmed demonstrators. The uprising brings global attention to the Palestinian struggle.
+                    </p>
+                    <img src="event7.jpg" alt="Sheikh Jarrah">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step5">
+                <div class="head">
+                    <div class="number-box">
+                        <span>08</span>
+                    </div>
+                    <h2><span class="small">1993</span> Oslo Accords – A False Promise </h2>
+                </div>
+                <div class="body">
+                    <p>
+                        The PLO signs an agreement with Israel, hoping for Palestinian self-rule. However, the deal allows Israel to maintain control over borders, resources, and security. Israeli settlements continue to expand, and the so-called "peace process" becomes a tool for further occupation rather than liberation.
+                    </p>
+                    <img src="event8.jpg" alt="Sheikh Jarrah">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step5">
+                <div class="head">
+                    <div class="number-box">
+                        <span>09</span>
+                    </div>
+                    <h2><span class="small">2000–2005</span> Second Intifada – Resistance Against Oppression</h2>
+                </div>
+                <div class="body">
+                    <p>
+                        After years of broken promises, Israeli provocations at Al-Aqsa Mosque trigger a second Palestinian uprising. The Israeli military responds with deadly force, using airstrikes, tanks, and live fire. Thousands of Palestinians are killed, and Israel builds the Apartheid Wall, further restricting Palestinian movement.
+                    </p>
+                    <img src="event9.jpg" alt="Sheikh Jarrah">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step5">
+                <div class="head">
+                    <div class="number-box">
+                        <span>10</span>
+                    </div>
+                    <h2><span class="small">2005</span> Israeli "Disengagement" from Gaza </h2>
+                </div>
+                <div class="body">
+                    <p>
+                        Israel claims to withdraw from Gaza but maintains a blockade, turning it into an open-air prison. Gaza’s economy collapses due to Israeli restrictions on food, medicine, and essential goods. The blockade leads to severe humanitarian crises and repeated Israeli bombardments.
+                    </p>
+                    <img src="event10.jpg" alt="Sheikh Jarrah">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step5">
+                <div class="head">
+                    <div class="number-box">
+                        <span>11</span>
+                    </div>
+                    <h2><span class="small">2006-2007</span> Hamas Wins Elections and Palestinian Political Divide</h2>
+                </div>
+                <div class="body">
+                    <p>
+                        Palestinians democratically elect Hamas, rejecting corruption in the Palestinian Authority. Israel and Western powers refuse to accept the results, imposing sanctions and isolating Gaza. Internal Palestinian divisions emerge, weakening the resistance against Israeli occupation.
+                    </p>
+                    <img src="event11.jpg" alt="Sheikh Jarrah">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step5">
+                <div class="head">
+                    <div class="number-box">
+                        <span>12</span>
+                    </div>
+                    <h2><span class="small">2008, 2012, 2014, 2021</span> Gaza Massacres – Repeated Israeli Assaults</h2>
+                </div>
+                <div class="body">
+                    <p>Israel launches multiple military offensives on Gaza, killing thousands, including children. Homes, schools, hospitals, and media buildings are bombed, while the world watches. Israel claims "self-defense," but Palestinians endure decades of occupation, blockade, and aggression.</p>
+                    <img src="event12.jpg" alt="Sheikh Jarrah">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step5">
+                <div class="head">
+                    <div class="number-box">
+                        <span>13</span>
+                    </div>
+                    <h2><span class="small">2017</span> Trump’s Jerusalem Declaration </h2>
+                </div>
+                <div class="body">
+                    <p>The U.S. recognizes Jerusalem as Israel’s capital, legitimizing Israeli apartheid and disregarding Palestinian rights. Protests erupt worldwide, but Israel continues demolishing Palestinian homes and expanding illegal settlements in the city.</p>
+                    <img src="event13.jpg" alt="Sheikh Jarrah">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step5">
+                <div class="head">
+                    <div class="number-box">
+                        <span>14</span>
+                    </div>
+                    <h2><span class="small">2023</span> Hamas' October 7, 2023 Attack and Israeli Retaliation</h2>
+                </div>
+                <div class="body">
+                    <p>Hamas launches an unprecedented attack on Israeli military and settlements, citing years of blockade, occupation, and oppression. Israel responds with relentless bombardment of Gaza, causing massive destruction and civilian casualties. The world debates "Israel’s right to defend itself," but Palestinian suffering continues under Israeli military aggression.</p>
+                    <img src="event14.jpg" alt="Sheikh Jarrah">
+                </div>
+            </div>
+            <div class="demo-card demo-card--step5">
+                <div class="head">
+                    <div class="number-box">
+                        <span>15</span>
+                    </div>
+                    <h2><span class="small">2024</span> Israel Expands War to Lebanon </h2>
+                </div>
+                <div class="body">
+                    <p>Israel escalates its attacks, targeting Hezbollah in Lebanon. Iran retaliates, raising fears of regional war. Meanwhile, Gaza faces starvation and displacement due to Israel’s blockade, while the West remains silent on the ongoing ethnic cleansing of Palestinians.</p>
+                    <img src="event15.jpg" alt="Sheikh Jarrah">
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Library Website. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Carousel Script
+        let index = 0;
+        function changeSlide() {
+            const slides = document.querySelectorAll('.slide');
+            slides[index].classList.remove('active');
+            index = (index + 1) % slides.length;
+            slides[index].classList.add('active');
+        }
+        setInterval(changeSlide, 3000);
+
+        // Lightbox Script
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = src;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+        }
+
+        // Smooth Scrolling for Navbar
+        document.querySelectorAll('.nav-links a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
